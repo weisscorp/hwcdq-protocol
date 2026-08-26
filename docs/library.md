@@ -1,11 +1,17 @@
 # `hwcdq-client` library
 
-The reusable implementation is an independent Python distribution under
-`packages/hwcdq-client`. Its import namespace is `hwcdq`. It contains the
-wire codec, framing, GATT selection, asynchronous charger session, safety
-profile, diagnostics, abstract transport/scanner contracts, and deterministic
-test fakes. It does not import Qt and its base installation has no third-party
-runtime dependencies.
+This repository is a monorepo with two Python distributions:
+
+- `hwcdq-client` under `packages/hwcdq-client` is the reusable, Qt-free library;
+  its import namespace is `hwcdq`.
+- `hwcdq-control` at the repository root is the optional Qt desktop workbench;
+  it imports the same `hwcdq` package and adds the UI, CLI, and desktop BLE
+  lifecycle.
+
+The reusable implementation contains the wire codec, framing, GATT selection,
+asynchronous charger session, safety profile, diagnostics, abstract
+transport/scanner contracts, and deterministic test fakes. It does not import
+Qt and its base installation has no third-party runtime dependencies.
 
 The repository-root `hwcdq-control` distribution is the desktop application.
 It owns the Qt UI, command-line interface, saved desktop preferences, Bleak

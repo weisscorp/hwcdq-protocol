@@ -1,14 +1,31 @@
-# Pidzoom Portable Charger HW178P — HWCDQ BLE libraries
+# Pidzoom Portable Charger HW178P — protocol, libraries, and desktop workbench
 
-`hwcdq-protocol` is an independent interoperability project for the
-**Pidzoom Portable Charger HW178P** (the HWCDQ BLE protocol). It provides a
-machine-readable wire contract, a safety-gated Python client, and native
-Swift/Kotlin codec libraries that can be used to build desktop, iOS, Android,
-or Home Assistant integrations.
+`hwcdq-protocol` is a small monorepo for independent interoperability with the
+**Pidzoom Portable Charger HW178P** (the HWCDQ BLE protocol). It contains the
+wire specification, reusable client libraries for several languages, and an
+optional Qt desktop workbench for testing the implementation against a charger
+or a deterministic simulator.
 
 This is an unofficial project. Pidzoom, HWCDQ, HW Smart Charger, and HW178P
 are names or marks of their respective owners. This repository is not
 affiliated with, endorsed by, or supported by the charger manufacturer.
+
+## What should I use?
+
+The repository has one protocol contract and several consumers. Pick the layer
+that matches the application you are building:
+
+| You are building | Use | What it provides |
+| --- | --- | --- |
+| A Python, Home Assistant, or automation integration | [`hwcdq-client`](packages/hwcdq-client) | Qt-free Python package, optional Bleak BLE transport, authenticated session, telemetry, and safety-gated control |
+| A macOS diagnostic UI or local test bench | [`hwcdq-control`](src/hwcdq_control) | The Qt desktop app/CLI that imports `hwcdq-client`; supports simulation and controlled BLE diagnostics |
+| An iOS app | [`native/swift`](native/swift) | Swift codec and framing library; add CoreBluetooth transport/session code in the host app |
+| An Android app | [`native/kotlin/hwcdq-protocol`](native/kotlin/hwcdq-protocol) | Kotlin/JVM codec and framing library; add Android BLE transport/session code in the host app |
+| Another implementation or a protocol audit | [`contract/v1`](contract/v1) and [`docs/`](docs) | Language-neutral vectors, packet layouts, confidence labels, and evidence |
+
+`hwcdq-client` and `hwcdq-control` are separate Python distributions that live
+in this same repository. The desktop workbench is not a second protocol
+implementation: it imports the canonical `hwcdq` package.
 
 ## Status and scope
 
@@ -36,7 +53,7 @@ interlocks and live-testing procedure before enabling control. Monitoring also
 sends authentication and read-only query frames; it is not a passive radio
 sniffer.
 
-## Repository at a glance
+## Repository layout
 
 | Path | Purpose | Runtime boundary |
 | --- | --- | --- |
