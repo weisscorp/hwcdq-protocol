@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "contract_version": "1.0.0",
+  "profile_id": "pidzoom-hw178p",
+  "contains_cases": [
+    {"id": "voltage_minimum", "quantity": "voltage", "value": {"decimal": "50.0", "f32le_hex": "00004842"}, "accepted": true},
+    {"id": "voltage_middle", "quantity": "voltage", "value": {"decimal": "84.0", "f32le_hex": "0000a842"}, "accepted": true},
+    {"id": "voltage_maximum", "quantity": "voltage", "value": {"decimal": "178.0", "f32le_hex": "00003243"}, "accepted": true},
+    {"id": "voltage_adjacent_below", "quantity": "voltage", "value": {"decimal": "49.999996185302734", "f32le_hex": "ffff4742"}, "accepted": false, "expected_code": "profile.out_of_range"},
+    {"id": "voltage_adjacent_above", "quantity": "voltage", "value": {"decimal": "178.00001525878906", "f32le_hex": "01003243"}, "accepted": false, "expected_code": "profile.out_of_range"},
+    {"id": "current_minimum", "quantity": "current", "value": {"decimal": "0.01", "f32le_hex": "0ad7233c"}, "accepted": true},
+    {"id": "current_middle", "quantity": "current", "value": {"decimal": "3.0", "f32le_hex": "00004040"}, "accepted": true},
+    {"id": "current_maximum", "quantity": "current", "value": {"decimal": "14.0", "f32le_hex": "00006041"}, "accepted": true},
+    {"id": "current_adjacent_below", "quantity": "current", "value": {"decimal": "0.009999998845160007", "f32le_hex": "09d7233c"}, "accepted": false, "expected_code": "profile.out_of_range"},
+    {"id": "current_adjacent_above", "quantity": "current", "value": {"decimal": "14.000000953674316", "f32le_hex": "01006041"}, "accepted": false, "expected_code": "profile.out_of_range"},
+    {"id": "voltage_nan", "quantity": "voltage", "value": {"kind": "nan"}, "accepted": false, "expected_code": "profile.value.invalid"},
+    {"id": "current_positive_infinity", "quantity": "current", "value": {"kind": "positive_infinity"}, "accepted": false, "expected_code": "profile.value.invalid"},
+    {"id": "current_negative_zero", "quantity": "current", "value": {"kind": "decimal", "decimal": "-0.0"}, "accepted": false, "expected_code": "profile.value.invalid"}
+  ],
+  "effective_limits_cases": [
+    {
+      "id": "live_exact_profile_maxima",
+      "config": {"max_voltage": {"decimal": "178.0", "f32le_hex": "00003243"}, "max_single_module_current": {"decimal": "14.0", "f32le_hex": "00006041"}},
+      "expected": {"voltage_minimum": "50.0", "voltage_maximum": "178.0", "current_minimum": "0.01", "current_maximum": "14.0"}
+    },
+    {
+      "id": "narrower_device_limits_win",
+      "config": {"max_voltage": {"decimal": "120.0", "f32le_hex": "0000f042"}, "max_single_module_current": {"decimal": "10.0", "f32le_hex": "00002041"}},
+      "expected": {"voltage_minimum": "50.0", "voltage_maximum": "120.0", "current_minimum": "0.01", "current_maximum": "10.0"}
+    },
+    {
+      "id": "larger_device_limits_do_not_expand_profile",
+      "config": {"max_voltage": {"decimal": "220.0", "f32le_hex": "00005c43"}, "max_single_module_current": {"decimal": "20.0", "f32le_hex": "0000a041"}},
+      "expected": {"voltage_minimum": "50.0", "voltage_maximum": "178.0", "current_minimum": "0.01", "current_maximum": "14.0"}
+    },
+    {
+      "id": "wire_equal_current_floor_is_valid",
+      "config": {"max_voltage": {"decimal": "50.0", "f32le_hex": "00004842"}, "max_single_module_current": {"decimal": "0.009999999776482582", "f32le_hex": "0ad7233c"}},
+      "expected": {"voltage_minimum": "50.0", "voltage_maximum": "50.0", "current_minimum": "0.01", "current_maximum": "0.01"}
+    },
+    {
+      "id": "missing_current_limit_fails_closed",
+      "config": {"max_voltage": {"decimal": "178.0", "f32le_hex": "00003243"}},
+      "expected": null,
+      "expected_code": "profile.device_limits.invalid"
+    },
+    {
+      "id": "nonfinite_voltage_limit_fails_closed",
+      "config": {"max_voltage": {"kind": "nan"}, "max_single_module_current": {"decimal": "14.0", "f32le_hex": "00006041"}},
+      "expected": null,
+      "expected_code": "profile.device_limits.invalid"
+    },
+    {
+      "id": "below_profile_minimum_fails_closed",
+      "config": {"max_voltage": {"decimal": "49.0", "f32le_hex": "00004442"}, "max_single_module_current": {"decimal": "14.0", "f32le_hex": "00006041"}},
+      "expected": null,
+      "expected_code": "profile.device_limits.invalid"
+    }
+  ],
+  "evidence": ["docs/protocol.md#configuration-and-safety-limits", "evidence/live-gatt-2026-08-25.md#hw178p-identity-and-control-range-provenance"]
+}

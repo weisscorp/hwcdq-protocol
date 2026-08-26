@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "contract_version": "1.0.0",
+  "contract": "HWCDQ language-neutral wire contract",
+  "hashing": {
+    "algorithm": "sha256",
+    "scope": "exact_file_bytes",
+    "path_format": "relative POSIX path from contract/v1",
+    "manifest_excluded": true,
+    "exclusion_reason": "self-hashing would be recursive"
+  },
+  "normative_files": [
+    {"path": "contract.schema.json", "sha256": "2d8dd272c175141b97d3c8e781269184585e18dc24a3812f09bcb9e1542b05c2"},
+    {"path": "gatt.json", "sha256": "e98254cec59b0cef8597fc7e4a09d267e1a2d4d6994e1c0cee5f9f5e1cb58ee2"},
+    {"path": "profiles/hw178p.json", "sha256": "d59f7bf3bfc15cb42634dceb63a5619d32ae662bf864f469608d73fcc73dba3f"},
+    {"path": "vectors/codec.json", "sha256": "19871c85907c4fa27e7608a05dd770b2ee6a37f286491cc48786bb84503090f0"},
+    {"path": "vectors/decode.json", "sha256": "78e86a4b96c60caede5724339b6829045d8985189267b54c5ad59ecca37693ff"},
+    {"path": "vectors/framing.json", "sha256": "7a7d35c0eea67b9a994f464869d791157f2e2acb697c370bd344aada246a36b0"},
+    {"path": "vectors/invalid.json", "sha256": "e4753ef19ff7b24ef6ab3aa15b6c199b2b5c007969bb4e54f35cd8aa462a9f10"},
+    {"path": "vectors/profile.json", "sha256": "b27edea2860059d8ae00c9e3df2c384083a93007fdf609a2c6944c317dca2d80"},
+    {"path": "wire.json", "sha256": "3957fcec1912b622cb6ea70e2ff0e4462e7fc7964a7683c79a3554e43314ad75"}
+  ],
+  "validation": {
+    "command": "python tools/validate_contract.py --check",
+    "validator_kind": "stdlib structural and semantic checker; not generic JSON Schema validation"
+  }
+}

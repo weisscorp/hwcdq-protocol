@@ -1,0 +1,192 @@
+{
+  "schema_version": 1,
+  "contract_version": "1.0.0",
+  "encode_cases": [
+    {
+      "id": "get_firmware",
+      "operation": "encode_get_firmware",
+      "arguments": {},
+      "expected": {"frame_hex": "020101", "opcode": 1, "payload_hex": "", "checksum_hex": "01"},
+      "confidence": "confirmed",
+      "evidence": ["docs/protocol.md#firmware-version--0x01"]
+    },
+    {
+      "id": "get_serial",
+      "operation": "encode_get_serial",
+      "arguments": {},
+      "expected": {"frame_hex": "020404", "opcode": 4, "payload_hex": "", "checksum_hex": "04"},
+      "confidence": "confirmed",
+      "evidence": ["docs/protocol.md#serial-number--0x04"]
+    },
+    {
+      "id": "get_config",
+      "operation": "encode_get_config",
+      "arguments": {},
+      "expected": {"frame_hex": "020505", "opcode": 5, "payload_hex": "", "checksum_hex": "05"},
+      "confidence": "confirmed",
+      "evidence": ["docs/protocol.md#configuration--0x05"]
+    },
+    {
+      "id": "get_telemetry",
+      "operation": "encode_get_telemetry",
+      "arguments": {},
+      "expected": {"frame_hex": "020606", "opcode": 6, "payload_hex": "", "checksum_hex": "06"},
+      "confidence": "confirmed",
+      "evidence": ["docs/protocol.md#current-values--telemetry--0x06"]
+    },
+    {
+      "id": "auth_apk_fallback",
+      "operation": "encode_authentication_apk_fallback",
+      "arguments": {},
+      "expected": {
+        "frame_hex": "230244343144384344393846303042323034453938303039393845434638343237450045",
+        "opcode": 2,
+        "payload_hex": "443431443843443938463030423230344539383030393938454346383432374500",
+        "checksum_hex": "45"
+      },
+      "confidence": "confirmed",
+      "evidence": ["docs/protocol.md#credential-check--0x02", "evidence/aot-findings.md#login-credential-derivation"]
+    },
+    {
+      "id": "auth_direct_lowercase_credential",
+      "operation": "encode_authentication_credential",
+      "arguments": {"credential": "abcdef0123456789abcdef0123456789"},
+      "expected": {
+        "frame_hex": "2302616263646566303132333435363738396162636465663031323334353637383900c6",
+        "opcode": 2,
+        "payload_hex": "616263646566303132333435363738396162636465663031323334353637383900",
+        "checksum_hex": "c6"
+      },
+      "confidence": "confirmed",
+      "evidence": ["docs/protocol.md#credential-check--0x02", "docs/cross-platform.md", "packages/hwcdq-client/src/hwcdq/profile.py"]
+    },
+    {
+      "id": "set_voltage_minimum_50",
+      "operation": "encode_set_voltage",
+      "arguments": {"value": {"decimal": "50.0", "f32le_hex": "00004842"}},
+      "expected": {"frame_hex": "06070000484291", "opcode": 7, "payload_hex": "00004842", "checksum_hex": "91"},
+      "confidence": "confirmed",
+      "evidence": ["docs/protocol.md#set-target-voltage--0x07"]
+    },
+    {
+      "id": "set_voltage_84",
+      "operation": "encode_set_voltage",
+      "arguments": {"value": {"decimal": "84.0", "f32le_hex": "0000a842"}},
+      "expected": {"frame_hex": "06070000a842f1", "opcode": 7, "payload_hex": "0000a842", "checksum_hex": "f1"},
+      "confidence": "confirmed",
+      "evidence": ["docs/protocol.md#test-vectors"]
+    },
+    {
+      "id": "set_voltage_134",
+      "operation": "encode_set_voltage",
+      "arguments": {"value": {"decimal": "134.0", "f32le_hex": "00000643"}},
+      "expected": {"frame_hex": "06070000064350", "opcode": 7, "payload_hex": "00000643", "checksum_hex": "50"},
+      "confidence": "confirmed",
+      "evidence": ["docs/protocol.md#test-vectors"]
+    },
+    {
+      "id": "set_voltage_maximum_178",
+      "operation": "encode_set_voltage",
+      "arguments": {"value": {"decimal": "178.0", "f32le_hex": "00003243"}},
+      "expected": {"frame_hex": "0607000032437c", "opcode": 7, "payload_hex": "00003243", "checksum_hex": "7c"},
+      "confidence": "confirmed",
+      "evidence": ["docs/protocol.md#configuration-and-safety-limits"]
+    },
+    {
+      "id": "set_current_minimum_001",
+      "operation": "encode_set_current",
+      "arguments": {"value": {"decimal": "0.01", "f32le_hex": "0ad7233c"}},
+      "expected": {"frame_hex": "06080ad7233c48", "opcode": 8, "payload_hex": "0ad7233c", "checksum_hex": "48"},
+      "confidence": "confirmed",
+      "evidence": ["docs/protocol.md#set-charge-current--0x08"]
+    },
+    {
+      "id": "set_current_3",
+      "operation": "encode_set_current",
+      "arguments": {"value": {"decimal": "3.0", "f32le_hex": "00004040"}},
+      "expected": {"frame_hex": "06080000404088", "opcode": 8, "payload_hex": "00004040", "checksum_hex": "88"},
+      "confidence": "confirmed",
+      "evidence": ["docs/protocol.md#set-charge-current--0x08"]
+    },
+    {
+      "id": "set_current_10",
+      "operation": "encode_set_current",
+      "arguments": {"value": {"decimal": "10.0", "f32le_hex": "00002041"}},
+      "expected": {"frame_hex": "06080000204169", "opcode": 8, "payload_hex": "00002041", "checksum_hex": "69"},
+      "confidence": "confirmed",
+      "evidence": ["docs/protocol.md#test-vectors"]
+    },
+    {
+      "id": "set_current_maximum_14",
+      "operation": "encode_set_current",
+      "arguments": {"value": {"decimal": "14.0", "f32le_hex": "00006041"}},
+      "expected": {"frame_hex": "060800006041a9", "opcode": 8, "payload_hex": "00006041", "checksum_hex": "a9"},
+      "confidence": "confirmed",
+      "evidence": ["docs/protocol.md#configuration-and-safety-limits"]
+    },
+    {
+      "id": "start_output",
+      "operation": "encode_start",
+      "arguments": {},
+      "expected": {"frame_hex": "060c000000000c", "opcode": 12, "payload_hex": "00000000", "checksum_hex": "0c"},
+      "confidence": "confirmed",
+      "evidence": ["evidence/live-gatt-2026-08-25.md#output-control-incident-and-command-polarity-correction"]
+    },
+    {
+      "id": "stop_output",
+      "operation": "encode_stop",
+      "arguments": {},
+      "expected": {"frame_hex": "060c010000000d", "opcode": 12, "payload_hex": "01000000", "checksum_hex": "0d"},
+      "confidence": "high_confidence",
+      "evidence": ["docs/protocol.md#startstop-output--0x0c", "evidence/aot-findings.md#generic-setter-and-core-opcodes"]
+    }
+  ],
+  "credential_cases": [
+    {
+      "id": "fallback_preserves_apk_uppercase",
+      "operation": "apk_fallback_credential",
+      "arguments": {},
+      "expected": {"credential_text": "D41D8CD98F00B204E9800998ECF8427E", "ascii_hex": "4434314438434439384630304232303445393830303939384543463834323745"},
+      "confidence": "confirmed",
+      "evidence": ["evidence/aot-findings.md#login-credential-derivation"]
+    },
+    {
+      "id": "direct_nonfallback_digest_is_canonical_lowercase",
+      "operation": "canonicalize_direct_credential",
+      "arguments": {"digest": "ABCDEF0123456789ABCDEF0123456789"},
+      "expected": {
+        "credential_text": "abcdef0123456789abcdef0123456789",
+        "frame_hex": "2302616263646566303132333435363738396162636465663031323334353637383900c6"
+      },
+      "confidence": "confirmed",
+      "evidence": ["docs/cross-platform.md", "packages/hwcdq-client/src/hwcdq/profile.py"]
+    },
+    {
+      "id": "direct_fallback_digest_uses_exact_apk_case",
+      "operation": "canonicalize_direct_credential",
+      "arguments": {"digest": "d41d8cd98f00b204e9800998ecf8427e"},
+      "expected": {
+        "credential_text": "D41D8CD98F00B204E9800998ECF8427E",
+        "frame_hex": "230244343144384344393846303042323034453938303039393845434638343237450045"
+      },
+      "confidence": "confirmed",
+      "evidence": ["packages/hwcdq-client/src/hwcdq/profile.py", "evidence/aot-findings.md#login-credential-derivation"]
+    }
+  ],
+  "python_legacy_cases": [
+    {
+      "id": "python_nonempty_password_uses_lowercase_utf8_md5",
+      "operation": "derive_password_credential",
+      "implementations": ["python"],
+      "shared_native_requirement": false,
+      "arguments": {"password": "test"},
+      "expected": {
+        "credential_text": "098f6bcd4621d373cade4e832627b4f6",
+        "frame_hex": "2302303938663662636434363231643337336361646534653833323632376234663600ca"
+      },
+      "confidence": "confirmed",
+      "evidence": ["docs/protocol.md#credential-check--0x02", "packages/hwcdq-client/src/hwcdq/protocol.py"]
+    }
+  ],
+  "evidence": ["docs/protocol.md#test-vectors"]
+}

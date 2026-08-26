@@ -1,0 +1,64 @@
+name: CI
+
+'on':
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  python:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Qt runtime dependencies
+        run: sudo apt-get update && sudo apt-get install -y libegl1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install project and test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e packages/hwcdq-client
+          python -m pip install -e .
+      - name: Validate shared contract
+        run: python tools/validate_contract.py --check
+      - name: Run Python and desktop tests
+        env:
+          QT_QPA_PLATFORM: offscreen
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: python -m unittest discover -s tests -v
+      - name: Build Python distributions
+        run: |
+          python -m pip install build
+          python -m build --outdir /tmp/hwcdq-root-dist .
+          python -m build --outdir /tmp/hwcdq-client-dist packages/hwcdq-client
+
+  swift:
+    name: Swift package
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test Swift codec
+        working-directory: native/swift
+        run: swift test
+
+  kotlin:
+    name: Kotlin/JVM package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+      - name: Test Kotlin codec
+        working-directory: native/kotlin/hwcdq-protocol
+        run: ./gradlew --no-daemon test

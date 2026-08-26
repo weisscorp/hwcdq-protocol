@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "contract_version": "1.0.0",
+  "cases": [
+    {
+      "id": "single_complete_frame",
+      "chunks_hex": ["020606"],
+      "expected_frames_hex": ["020606"],
+      "expected_buffered_bytes": 0
+    },
+    {
+      "id": "split_at_every_boundary",
+      "chunks_hex": ["06", "07", "00", "00", "a8", "42", "f1"],
+      "expected_frames_hex": ["06070000a842f1"],
+      "expected_buffered_bytes": 0
+    },
+    {
+      "id": "split_fallback_credential_like_mtu20",
+      "chunks_hex": [
+        "230244343144384344393846303042323034453938",
+        "303039393845434638343237450045"
+      ],
+      "expected_frames_hex": ["230244343144384344393846303042323034453938303039393845434638343237450045"],
+      "expected_buffered_bytes": 0
+    },
+    {
+      "id": "coalesced_three_frames",
+      "chunks_hex": ["020101020505020606"],
+      "expected_frames_hex": ["020101", "020505", "020606"],
+      "expected_buffered_bytes": 0
+    },
+    {
+      "id": "complete_then_partial",
+      "chunks_hex": ["02040406", "0700"],
+      "expected_frames_hex": ["020404"],
+      "expected_buffered_bytes": 3
+    },
+    {
+      "id": "truncated_frame_is_buffered_not_rejected",
+      "chunks_hex": ["06", "0c01"],
+      "expected_frames_hex": [],
+      "expected_buffered_bytes": 3
+    },
+    {
+      "id": "invalid_length_zero_fails_closed",
+      "chunks_hex": ["00020606"],
+      "expected_frames_hex": [],
+      "expected_buffered_bytes": 0,
+      "expected_code": "stream.length.invalid",
+      "post_error_chunks_hex": ["020606"],
+      "post_error_frames_hex": ["020606"]
+    },
+    {
+      "id": "invalid_length_one_fails_closed",
+      "chunks_hex": ["01"],
+      "expected_frames_hex": [],
+      "expected_buffered_bytes": 0,
+      "expected_code": "stream.length.invalid"
+    },
+    {
+      "id": "frame_exceeds_configured_maximum",
+      "maximum_frame_size": 20,
+      "chunks_hex": ["23"],
+      "expected_frames_hex": [],
+      "expected_buffered_bytes": 0,
+      "expected_code": "stream.length.invalid"
+    },
+    {
+      "id": "checksum_failure_discards_following_coalesced_frame",
+      "chunks_hex": ["020405020606"],
+      "expected_frames_hex": [],
+      "expected_buffered_bytes": 0,
+      "expected_code": "stream.frame.invalid",
+      "post_error_chunks_hex": ["020505"],
+      "post_error_frames_hex": ["020505"]
+    }
+  ],
+  "stream_rule": {
+    "no_sync_word": true,
+    "on_invalid_length_or_frame": "clear complete buffer and fail closed",
+    "incomplete_candidate": "retain until more bytes arrive"
+  },
+  "evidence": ["docs/protocol.md#application-framing", "docs/protocol.md#ble-fragmentation"]
+}

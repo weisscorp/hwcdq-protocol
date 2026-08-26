@@ -1,0 +1,339 @@
+{
+  "schema_version": 1,
+  "contract_version": "1.0.0",
+  "protocol": "HWCDQ",
+  "frame": {
+    "minimum_frame_bytes": 3,
+    "maximum_frame_bytes": 256,
+    "maximum_payload_bytes": 253,
+    "fields": [
+      {
+        "name": "remaining_length",
+        "offset": 0,
+        "size": 1,
+        "type": "uint8",
+        "meaning": "number of following bytes: opcode, payload, checksum",
+        "minimum": 2
+      },
+      {
+        "name": "opcode",
+        "offset": 1,
+        "size": 1,
+        "type": "uint8"
+      },
+      {
+        "name": "payload",
+        "offset": 2,
+        "size": "remaining_length - 2",
+        "type": "bytes"
+      },
+      {
+        "name": "checksum",
+        "offset": "remaining_length",
+        "size": 1,
+        "type": "uint8"
+      }
+    ],
+    "magic": null,
+    "terminator": null,
+    "sequence": null,
+    "counter": null
+  },
+  "checksum": {
+    "name": "sum8",
+    "algorithm": "(opcode + sum(payload bytes)) & 0xff",
+    "covered_from": "opcode",
+    "covered_through": "last payload byte",
+    "excluded": [
+      "remaining_length",
+      "checksum"
+    ],
+    "stored_bytes": 1,
+    "crc_parameters": null
+  },
+  "byte_order": "little",
+  "scalar_types": {
+    "uint8": {
+      "size": 1
+    },
+    "uint16le": {
+      "size": 2
+    },
+    "int32le": {
+      "size": 4
+    },
+    "f32le": {
+      "size": 4,
+      "format": "IEEE-754 binary32",
+      "setpoint_requirement": "positive and finite after binary32 conversion"
+    },
+    "credential": {
+      "size": 33,
+      "format": "32 ASCII hexadecimal bytes followed by NUL"
+    }
+  },
+  "commands": [
+    {
+      "opcode": 1,
+      "opcode_hex": "01",
+      "name": "get_firmware",
+      "request_payload": "empty",
+      "response_payload": "device bytes rendered as character codes by APK",
+      "executable": true,
+      "confidence": "confirmed",
+      "evidence": [
+        "docs/protocol.md#firmware-version--0x01",
+        "evidence/live-gatt-2026-08-25.md#live-application-frames"
+      ]
+    },
+    {
+      "opcode": 2,
+      "opcode_hex": "02",
+      "name": "check_credential",
+      "request_payload": "credential",
+      "response_payload": "u8 acknowledgement: 1 accepted, 0 rejected",
+      "executable": true,
+      "confidence": "confirmed",
+      "evidence": [
+        "docs/protocol.md#credential-check--0x02",
+        "evidence/aot-findings.md#login-credential-derivation"
+      ]
+    },
+    {
+      "opcode": 4,
+      "opcode_hex": "04",
+      "name": "get_serial",
+      "request_payload": "empty",
+      "response_payload": "binary serial",
+      "executable": true,
+      "confidence": "confirmed",
+      "evidence": [
+        "docs/protocol.md#serial-number--0x04",
+        "evidence/live-gatt-2026-08-25.md#live-application-frames"
+      ]
+    },
+    {
+      "opcode": 5,
+      "opcode_hex": "05",
+      "name": "get_config",
+      "request_payload": "empty",
+      "response_payload": "config103",
+      "executable": true,
+      "confidence": "confirmed",
+      "evidence": [
+        "docs/protocol.md#configuration--0x05",
+        "evidence/aot-findings.md#function-map"
+      ]
+    },
+    {
+      "opcode": 6,
+      "opcode_hex": "06",
+      "name": "get_telemetry",
+      "request_payload": "empty",
+      "response_payload": "telemetry46",
+      "executable": true,
+      "confidence": "confirmed",
+      "evidence": [
+        "docs/protocol.md#current-values--telemetry--0x06",
+        "evidence/live-gatt-2026-08-25.md#live-application-frames"
+      ]
+    },
+    {
+      "opcode": 7,
+      "opcode_hex": "07",
+      "name": "set_voltage",
+      "request_payload": "one f32le volts",
+      "response_payload": "u8 acknowledgement",
+      "executable": true,
+      "confidence": "confirmed",
+      "evidence": [
+        "docs/protocol.md#set-target-voltage--0x07",
+        "evidence/aot-findings.md#generic-setter-and-core-opcodes"
+      ]
+    },
+    {
+      "opcode": 8,
+      "opcode_hex": "08",
+      "name": "set_current",
+      "request_payload": "one f32le amperes",
+      "response_payload": "u8 acknowledgement",
+      "executable": true,
+      "confidence": "confirmed",
+      "evidence": [
+        "docs/protocol.md#set-charge-current--0x08",
+        "evidence/aot-findings.md#generic-setter-and-core-opcodes"
+      ]
+    },
+    {
+      "opcode": 12,
+      "opcode_hex": "0c",
+      "name": "output_control",
+      "request_payload": "int32le: 0 start/on; 1 stop/off",
+      "response_payload": "u8 acknowledgement; verify state using telemetry",
+      "executable": true,
+      "confidence": "confirmed",
+      "evidence": [
+        "docs/protocol.md#startstop-output--0x0c",
+        "evidence/live-gatt-2026-08-25.md#output-control-incident-and-command-polarity-correction"
+      ],
+      "variants": [
+        {
+          "name": "start",
+          "value": 0,
+          "enabled": true,
+          "confidence": "confirmed"
+        },
+        {
+          "name": "stop",
+          "value": 1,
+          "enabled": false,
+          "confidence": "high_confidence"
+        }
+      ]
+    }
+  ],
+  "non_executable": [
+    {
+      "opcode": 3,
+      "opcode_hex": "03",
+      "name": "change_password",
+      "confidence": "high_confidence",
+      "executable": false,
+      "reason": "not required for interoperability and not live-captured",
+      "evidence": [
+        "evidence/aot-findings.md#password-change-path"
+      ]
+    },
+    {
+      "opcode": 19,
+      "opcode_hex": "13",
+      "name": "unknown_setter",
+      "confidence": "unknown",
+      "executable": false,
+      "reason": "call site exists but semantics are unresolved",
+      "evidence": [
+        "docs/commands.md#settings-and-calibration-writes"
+      ]
+    },
+    {
+      "opcode": 225,
+      "opcode_hex": "e1",
+      "name": "unknown_vector_opcode",
+      "confidence": "unknown",
+      "executable": false,
+      "reason": "reserved only to prove lossless unknown-packet decoding",
+      "evidence": [
+        "tests/test_protocol.py"
+      ]
+    }
+  ],
+  "acknowledgement_opcodes": [
+    2,
+    7,
+    8,
+    12
+  ],
+  "config103": {
+    "payload_bytes": 103,
+    "fields": [
+      {"name": "target_voltage", "offset": 0, "type": "f32le", "size": 4},
+      {"name": "target_current", "offset": 4, "type": "f32le", "size": 4},
+      {"name": "offline_voltage", "offset": 8, "type": "f32le", "size": 4},
+      {"name": "offline_current", "offset": 12, "type": "f32le", "size": 4},
+      {"name": "power_on_output", "offset": 16, "type": "uint8", "size": 1},
+      {"name": "voltage_calibration", "offset": 17, "type": "f32le", "size": 4},
+      {"name": "voltage_feedback_calibration", "offset": 21, "type": "f32le", "size": 4},
+      {"name": "current_calibration", "offset": 25, "type": "f32le", "size": 4},
+      {"name": "current_feedback_calibration", "offset": 29, "type": "f32le", "size": 4},
+      {"name": "max_voltage", "offset": 33, "type": "f32le", "size": 4},
+      {"name": "max_single_module_current", "offset": 37, "type": "f32le", "size": 4},
+      {"name": "auto_stop", "offset": 41, "type": "uint8", "size": 1},
+      {"name": "shutdown_current", "offset": 42, "type": "f32le", "size": 4},
+      {"name": "raw_u8_46", "offset": 46, "type": "uint8", "size": 1},
+      {"name": "temperature_protection", "offset": 47, "type": "uint8", "size": 1},
+      {"name": "raw_u8_48", "offset": 48, "type": "uint8", "size": 1},
+      {"name": "protection_cutoff_temperature", "offset": 49, "type": "uint8", "size": 1},
+      {"name": "fan_boost_temperature", "offset": 50, "type": "uint8", "size": 1},
+      {"name": "fan_max_temperature", "offset": 51, "type": "uint8", "size": 1},
+      {"name": "raw_ascii_23", "offset": 52, "type": "bytes", "size": 23},
+      {"name": "two_stage_charging", "offset": 75, "type": "uint8", "size": 1},
+      {"name": "secondary_voltage", "offset": 76, "type": "f32le", "size": 4},
+      {"name": "secondary_current", "offset": 80, "type": "f32le", "size": 4},
+      {"name": "offline_control", "offset": 84, "type": "uint8", "size": 1},
+      {"name": "raw_u8_85", "offset": 85, "type": "uint8", "size": 1},
+      {"name": "soft_start_coefficient", "offset": 86, "type": "uint8", "size": 1},
+      {"name": "power_limit", "offset": 87, "type": "uint16le", "size": 2},
+      {"name": "max_power", "offset": 89, "type": "uint16le", "size": 2},
+      {"name": "display_language_raw", "offset": 91, "type": "bytes", "size": 8},
+      {"name": "raw_u8_99", "offset": 99, "type": "uint8", "size": 1},
+      {"name": "raw_u8_100", "offset": 100, "type": "uint8", "size": 1},
+      {"name": "raw_u8_101", "offset": 101, "type": "uint8", "size": 1},
+      {"name": "raw_u8_102", "offset": 102, "type": "uint8", "size": 1}
+    ],
+    "confidence": "confirmed",
+    "evidence": [
+      "docs/commands.md#configuration-response-0x05",
+      "evidence/aot-findings.md#function-map"
+    ]
+  },
+  "telemetry46": {
+    "payload_bytes": 46,
+    "fields": [
+      {"name": "input_voltage", "offset": 0, "type": "f32le", "size": 4},
+      {"name": "input_current", "offset": 4, "type": "f32le", "size": 4},
+      {"name": "input_frequency", "offset": 8, "type": "f32le", "size": 4},
+      {"name": "temperature_1", "offset": 12, "type": "f32le", "size": 4},
+      {"name": "temperature_2", "offset": 16, "type": "f32le", "size": 4},
+      {"name": "output_voltage", "offset": 20, "type": "f32le", "size": 4},
+      {"name": "output_current", "offset": 24, "type": "f32le", "size": 4},
+      {"name": "current_point", "offset": 28, "type": "f32le", "size": 4},
+      {"name": "efficiency", "offset": 32, "type": "f32le", "size": 4},
+      {"name": "current_output", "offset": 36, "type": "uint8", "size": 1},
+      {"name": "accumulated_capacity_ah", "offset": 37, "type": "f32le", "size": 4},
+      {"name": "accumulated_energy_wh", "offset": 41, "type": "f32le", "size": 4},
+      {"name": "module_count", "offset": 45, "type": "uint8", "size": 1}
+    ],
+    "derived_fields": {
+      "arithmetic": {
+        "decoded_operand": "decode f32le to its exact IEEE-754 binary32 value, then promote that value to IEEE-754 binary64",
+        "operation": "IEEE-754 binary64 multiplication",
+        "rounding": "round to nearest, ties to even"
+      },
+      "input_power_w": "binary64(input_voltage_f32) * binary64(input_current_f32)",
+      "output_power_w": "binary64(output_voltage_f32) * binary64(output_current_f32)",
+      "output_enabled": {
+        "0": true,
+        "1": false,
+        "other": null
+      }
+    },
+    "confidence": "confirmed",
+    "evidence": [
+      "docs/protocol.md#current-values--telemetry--0x06",
+      "evidence/live-gatt-2026-08-25.md#output-state-polarity-correction"
+    ]
+  },
+  "conformance_codes": [
+    "credential.length",
+    "credential.non_hex",
+    "credential.type",
+    "packet.checksum.mismatch",
+    "packet.length.minimum",
+    "packet.length.mismatch",
+    "packet.truncated",
+    "profile.device_limits.invalid",
+    "profile.out_of_range",
+    "profile.value.invalid",
+    "scalar.non_finite",
+    "scalar.non_positive",
+    "scalar.not_float32",
+    "scalar.type",
+    "stream.frame.invalid",
+    "stream.length.invalid"
+  ],
+  "evidence": [
+    "docs/protocol.md#application-framing",
+    "evidence/aot-findings.md#frame-and-checksum-receiver",
+    "evidence/aot-findings.md#outgoing-frame-builder"
+  ]
+}

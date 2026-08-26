@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "contract_version": "1.0.0",
+  "bluetooth_base_uuid": "0000xxxx-0000-1000-8000-00805f9b34fb",
+  "service": {
+    "short_uuid": "ffe1",
+    "uuid": "0000ffe1-0000-1000-8000-00805f9b34fb",
+    "role": "HWCDQ parent service",
+    "selection": "require exactly one instance containing exactly one usable sibling RX and TX characteristic",
+    "confidence": "confirmed",
+    "evidence": [
+      "evidence/aot-findings.md#gatt-uuid-assignment",
+      "evidence/live-gatt-2026-08-25.md#gatt-observation-chain"
+    ]
+  },
+  "rx": {
+    "short_uuid": "ffe2",
+    "uuid": "0000ffe2-0000-1000-8000-00805f9b34fb",
+    "direction": "charger_to_client",
+    "required_operation": "notify",
+    "application_read": false,
+    "live_properties": [
+      "indicate",
+      "notify",
+      "read",
+      "write",
+      "write-without-response"
+    ],
+    "confidence": "confirmed",
+    "evidence": [
+      "docs/protocol.md#gatt-transport",
+      "evidence/live-gatt-2026-08-25.md#gatt-observation-chain"
+    ]
+  },
+  "tx": {
+    "short_uuid": "ffe3",
+    "uuid": "0000ffe3-0000-1000-8000-00805f9b34fb",
+    "direction": "client_to_charger",
+    "operations": [
+      "write-without-response",
+      "write"
+    ],
+    "preferred_operation": "write-without-response",
+    "fallback_operation": "write",
+    "application_read": false,
+    "live_maximum_write_without_response": 253,
+    "write_without_response_soak_status": "pending",
+    "confidence": "confirmed",
+    "evidence": [
+      "docs/protocol.md#gatt-transport",
+      "evidence/live-gatt-2026-08-25.md#acknowledged-write-failure-and-wnr-boundary"
+    ]
+  },
+  "fragmentation": {
+    "application_fragment_header": false,
+    "rule": "construct one complete application frame, then split into ordered ATT writes no larger than the platform write limit",
+    "android_requested_mtu": 120,
+    "android_chunk_bytes": 117,
+    "inter_chunk_delay_ms": 30,
+    "ios_rule": "use maximumWriteValueLength for the selected write type",
+    "confidence": "confirmed",
+    "evidence": [
+      "docs/protocol.md#ble-fragmentation",
+      "evidence/aot-findings.md#function-map"
+    ]
+  },
+  "rejected_preliminary_service": {
+    "short_uuid": "ffe0",
+    "executable": false,
+    "reason": "not selected by the recovered route and absent from the sampled charger GATT table",
+    "confidence": "confirmed",
+    "evidence": [
+      "docs/protocol.md#gatt-transport"
+    ]
+  },
+  "evidence": [
+    "docs/protocol.md#gatt-transport"
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "contract_version": "1.0.0",
+  "invalid_cases": [
+    {"id": "packet_empty", "operation": "decode_packet", "arguments": {"packet_hex": ""}, "expected_code": "packet.truncated"},
+    {"id": "packet_length_only", "operation": "decode_packet", "arguments": {"packet_hex": "02"}, "expected_code": "packet.truncated"},
+    {"id": "packet_without_checksum", "operation": "decode_packet", "arguments": {"packet_hex": "0204"}, "expected_code": "packet.truncated"},
+    {"id": "length_zero", "operation": "decode_packet", "arguments": {"packet_hex": "000404"}, "expected_code": "packet.length.minimum"},
+    {"id": "length_one", "operation": "decode_packet", "arguments": {"packet_hex": "010404"}, "expected_code": "packet.length.minimum"},
+    {"id": "declared_too_long", "operation": "decode_packet", "arguments": {"packet_hex": "030404"}, "expected_code": "packet.length.mismatch"},
+    {"id": "trailing_byte", "operation": "decode_packet", "arguments": {"packet_hex": "02040004"}, "expected_code": "packet.length.mismatch"},
+    {"id": "bad_checksum", "operation": "decode_packet", "arguments": {"packet_hex": "020405"}, "expected_code": "packet.checksum.mismatch"},
+    {"id": "voltage_nan", "operation": "encode_set_voltage", "arguments": {"value": {"kind": "nan"}}, "expected_code": "scalar.non_finite"},
+    {"id": "voltage_positive_infinity", "operation": "encode_set_voltage", "arguments": {"value": {"kind": "positive_infinity"}}, "expected_code": "scalar.non_finite"},
+    {"id": "current_negative_infinity", "operation": "encode_set_current", "arguments": {"value": {"kind": "negative_infinity"}}, "expected_code": "scalar.non_finite"},
+    {"id": "voltage_positive_zero", "operation": "encode_set_voltage", "arguments": {"value": {"kind": "decimal", "decimal": "0.0"}}, "expected_code": "scalar.non_positive"},
+    {"id": "current_negative_zero", "operation": "encode_set_current", "arguments": {"value": {"kind": "decimal", "decimal": "-0.0"}}, "expected_code": "scalar.non_positive"},
+    {"id": "voltage_negative", "operation": "encode_set_voltage", "arguments": {"value": {"kind": "decimal", "decimal": "-1.0"}}, "expected_code": "scalar.non_positive"},
+    {"id": "current_overflow_binary32", "operation": "encode_set_current", "arguments": {"value": {"kind": "decimal", "decimal": "1e100"}}, "expected_code": "scalar.not_float32"},
+    {"id": "voltage_underflow_to_zero_binary32", "operation": "encode_set_voltage", "arguments": {"value": {"kind": "decimal", "decimal": "1e-100"}}, "expected_code": "scalar.not_float32"},
+    {"id": "voltage_boolean", "operation": "encode_set_voltage", "implementations": ["python"], "shared_native_requirement": false, "arguments": {"value": {"kind": "boolean", "value": true}}, "expected_code": "scalar.type"},
+    {"id": "credential_empty", "operation": "encode_authentication_credential", "arguments": {"credential": ""}, "expected_code": "credential.length"},
+    {"id": "credential_31_chars", "operation": "encode_authentication_credential", "arguments": {"credential": "0000000000000000000000000000000"}, "expected_code": "credential.length"},
+    {"id": "credential_33_chars", "operation": "encode_authentication_credential", "arguments": {"credential": "000000000000000000000000000000000"}, "expected_code": "credential.length"},
+    {"id": "credential_nonhex_ascii", "operation": "encode_authentication_credential", "arguments": {"credential": "gggggggggggggggggggggggggggggggg"}, "expected_code": "credential.non_hex"},
+    {"id": "credential_nonascii", "operation": "encode_authentication_credential", "arguments": {"credential": "éééééééééééééééééééééééééééééééé"}, "expected_code": "credential.length"},
+    {"id": "credential_wrong_type", "operation": "encode_authentication_credential", "implementations": ["python"], "shared_native_requirement": false, "arguments": {"credential_kind": "integer", "credential_value": 1234}, "expected_code": "credential.type"}
+  ],
+  "evidence": ["docs/protocol.md#application-framing", "docs/protocol.md#scalar-encodings", "docs/protocol.md#credential-check--0x02"]
+}

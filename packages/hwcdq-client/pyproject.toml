@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=80", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hwcdq-client"
+version = "0.1.0"
+description = "Qt-free protocol and asynchronous BLE client for the Pidzoom Portable Charger HW178P"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{ name = "HWCDQ interoperability contributors" }]
+license = "MIT"
+license-files = ["LICENSE"]
+keywords = ["ble", "bluetooth-low-energy", "charger", "hwcdq", "pidzoom"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Topic :: Home Automation",
+  "Topic :: System :: Hardware",
+]
+dependencies = []
+
+[project.optional-dependencies]
+bleak = ["bleak==3.0.2"]
+
+[project.urls]
+Homepage = "https://github.com/weisscorp/hwcdq-protocol"
+Repository = "https://github.com/weisscorp/hwcdq-protocol"
+Issues = "https://github.com/weisscorp/hwcdq-protocol/issues"
+
+[tool.setuptools]
+packages = ["hwcdq"]
+package-dir = { hwcdq = "src/hwcdq" }
+
+[tool.setuptools.package-data]
+hwcdq = ["py.typed"]

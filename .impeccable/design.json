@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-25T11:20:00+04:00",
+  "title": "Design System: Pidzoom Portable charger HW178P",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Instrument Teal",
+        "canonical": "oklch(0.490 0.100 188)",
+        "tonalRamp": ["oklch(0.15 0.10 188)", "oklch(0.25 0.10 188)", "oklch(0.35 0.10 188)", "oklch(0.49 0.10 188)", "oklch(0.60 0.10 188)", "oklch(0.72 0.10 188)", "oklch(0.84 0.08 188)", "oklch(0.95 0.03 188)"]
+      },
+      "attention": {
+        "role": "secondary",
+        "displayName": "Bench Copper",
+        "canonical": "oklch(0.580 0.160 52)",
+        "tonalRamp": ["oklch(0.15 0.16 52)", "oklch(0.25 0.16 52)", "oklch(0.36 0.16 52)", "oklch(0.48 0.16 52)", "oklch(0.58 0.16 52)", "oklch(0.70 0.14 52)", "oklch(0.84 0.10 52)", "oklch(0.95 0.04 52)"]
+      },
+      "danger": {
+        "role": "tertiary",
+        "displayName": "Safety Red",
+        "canonical": "oklch(0.520 0.190 28)",
+        "tonalRamp": ["oklch(0.15 0.19 28)", "oklch(0.25 0.19 28)", "oklch(0.35 0.19 28)", "oklch(0.45 0.19 28)", "oklch(0.52 0.19 28)", "oklch(0.68 0.14 28)", "oklch(0.82 0.09 28)", "oklch(0.95 0.03 28)"]
+      },
+      "background": {
+        "role": "neutral",
+        "displayName": "Lab Paper",
+        "canonical": "oklch(1.000 0.000 0)",
+        "tonalRamp": ["oklch(0.15 0 0)", "oklch(0.27 0 0)", "oklch(0.39 0 0)", "oklch(0.51 0 0)", "oklch(0.63 0 0)", "oklch(0.75 0 0)", "oklch(0.87 0 0)", "oklch(1.00 0 0)"]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Graphite Ink",
+        "canonical": "oklch(0.210 0.015 210)",
+        "tonalRamp": ["oklch(0.15 0.015 210)", "oklch(0.21 0.015 210)", "oklch(0.33 0.015 210)", "oklch(0.45 0.015 210)", "oklch(0.57 0.015 210)", "oklch(0.69 0.015 210)", "oklch(0.82 0.012 210)", "oklch(0.95 0.006 210)"]
+      }
+    },
+    "typographyMeta": {
+      "title": {"displayName": "Instrument Title", "purpose": "Product identity in the fixed header only."},
+      "body": {"displayName": "Native Body", "purpose": "Operational UI and explanatory text."},
+      "reading": {"displayName": "Exact Reading", "purpose": "Glanceable tabular telemetry."},
+      "protocol": {"displayName": "Protocol Evidence", "purpose": "UUIDs, byte frames, and offsets."}
+    },
+    "shadows": [],
+    "motion": [
+      {"name": "state-only", "value": "native Qt state transition", "purpose": "Immediate hover, focus, and status feedback only."}
+    ],
+    "breakpoints": [
+      {"name": "minimum-window", "value": "1100x720"},
+      {"name": "default-window", "value": "1220x800"}
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The single ordinary next action, calm and explicit.",
+      "html": "<button class=\"ds-btn-primary\">ПОДКЛЮЧИТЬ</button>",
+      "css": ".ds-btn-primary { background:#00726B; color:#fff; min-height:30px; padding:2px 12px; border:1px solid #00544E; border-radius:4px; font:650 13px system-ui; } .ds-btn-primary:hover { background:#00544E; } .ds-btn-primary:focus-visible { outline:2px solid #00726B; outline-offset:2px; }"
+    },
+    {
+      "name": "State-aware Output Control",
+      "kind": "button",
+      "refersTo": "button-stop",
+      "description": "One fixed header location: Start for fresh explicit OFF, immediate Stop for fresh explicit ON, disabled otherwise.",
+      "html": "<button class=\"ds-btn-stop\">■ Остановить выход</button>",
+      "css": ".ds-btn-stop { background:#BE241F; color:#fff; min-height:38px; padding:2px 18px; border:1px solid #8D1714; border-radius:4px; font:750 13px system-ui; } .ds-btn-stop:hover { background:#9E1D19; } .ds-btn-stop:focus-visible { outline:2px solid #00726B; outline-offset:2px; }"
+    },
+    {
+      "name": "Status Badge",
+      "kind": "chip",
+      "refersTo": "status-badge",
+      "description": "Symbol plus text keeps state independent from color.",
+      "html": "<span class=\"ds-status\">✓ Данные: свежие</span>",
+      "css": ".ds-status { display:inline-block; background:#E4F4F1; color:#00544E; border:1px solid #00726B; border-radius:4px; padding:5px 8px; font:650 13px system-ui; }"
+    },
+    {
+      "name": "Target Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Exact value, unit, and configured range stay together.",
+      "html": "<label class=\"ds-field\">Напряжение <input value=\"84.00\" aria-label=\"Целевое напряжение\"><span>V · 50.00…178.00 V</span></label>",
+      "css": ".ds-field { display:flex; align-items:center; gap:8px; color:#101A1C; font:13px system-ui; } .ds-field input { width:82px; min-height:30px; padding:1px 8px; border:1px solid #C4CCCE; border-radius:4px; font:13px 'SF Mono',monospace; } .ds-field input:focus-visible { outline:2px solid #00726B; outline-offset:1px; } .ds-field span { color:#516164; }"
+    },
+    {
+      "name": "Telemetry Reading",
+      "kind": "custom",
+      "refersTo": "reading",
+      "description": "Stable label, aligned number, and fixed engineering unit.",
+      "html": "<div class=\"ds-reading\"><span>Выходное напряжение</span><strong>84.00</strong><em>V</em></div>",
+      "css": ".ds-reading { display:grid; grid-template-columns:1fr auto 28px; gap:6px; align-items:end; padding:7px 8px; background:#fff; color:#101A1C; } .ds-reading span { grid-column:1 / -1; color:#516164; font:13px system-ui; } .ds-reading strong { font:650 25px/1.15 'SF Mono',monospace; font-variant-numeric:tabular-nums; } .ds-reading em { color:#516164; font:normal 13px system-ui; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Calibrated Bench Meter",
+    "overview": "The interface is a light, high-contrast work surface for an engineer operating high-voltage equipment in mixed bench lighting. Information is aligned, measured, and explicit; the application earns trust by showing connection, authentication, freshness, provenance, and uncertainty instead of polishing those details away. The 1220×800 default window uses a fixed header, a stable workbench, and tabs for transport evidence. It stays usable down to 1100×720 without fluid display type or decorative rearrangement.",
+    "keyCharacteristics": ["Pure-white working canvas and cool neutral instrument panels.", "One restrained teal identity color and sparse semantic signals.", "Large tabular numeric telemetry with compact engineering units.", "Persistent textual status, safety interlocks, and one state-aware output control.", "Raw protocol evidence available through progressive disclosure.", "Motion limited to native direct state feedback."],
+    "rules": [
+      {"name": "The One Voice Rule", "body": "Teal occupies no more than ten percent of a window and identifies selection, focus, or safe progress only.", "section": "colors"},
+      {"name": "The Signal Rule", "body": "Copper and red appear only when an operator decision or a safety condition demands attention.", "section": "colors"},
+      {"name": "The Exact Number Rule", "body": "Never replace a measured engineering value with an unlabelled decorative gauge.", "section": "typography"},
+      {"name": "The Stationary Surface Rule", "body": "A working instrument stays spatially stable while readings change.", "section": "elevation"}
+    ],
+    "dos": ["Do keep connection, authentication, freshness, and command outcome visible without opening a dialog.", "Do pair every status color with text and a simple symbol.", "Do align telemetry decimals and engineering units with the Reading token.", "Do keep one output-control location stable while its role follows fresh explicit OFF/ON state.", "Do label simulator data as simulated in every relevant surface and export.", "Do use familiar native controls and consistent 4–5px shapes."],
+    "donts": ["Don't build a browser or SaaS control panel.", "Don't imitate a decorative consumer charging app with gauges that hide exact values.", "Don't use a dark “hacker dashboard” with neon accents, glow, or gratuitous motion.", "Don't hide automation, reconnect behavior, or uncertain command outcomes.", "Don't use color-only alarms or tiny low-contrast telemetry.", "Don't expose a raw opcode console capable of transmitting unsupported commands.", "Don't invent custom scrollbars, animated gauges, or non-native modal behavior for visual flavor."]
+  }
+}

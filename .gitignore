@@ -1,0 +1,18 @@
+# Preserved proprietary/untrusted inputs and generated reverse-engineering data.
+artifacts/*
+research/*
+
+# Local Python execution state.
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+*.egg-info/
+build/
+dist/
+logs/
+.gradle/
+.swiftpm/
+
+# macOS metadata.
+.DS_Store

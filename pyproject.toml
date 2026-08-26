@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=80", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hwcdq-control"
+version = "0.1.0"
+description = "Optional Qt/macOS workbench for the Pidzoom HW178P HWCDQ BLE library"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{ name = "HWCDQ interoperability contributors" }]
+license = "MIT"
+license-files = ["LICENSE"]
+keywords = ["ble", "bluetooth-low-energy", "charger", "hwcdq", "pidzoom"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Operating System :: MacOS",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Topic :: Home Automation",
+  "Topic :: System :: Hardware",
+]
+dependencies = [
+  "hwcdq-client==0.1.0",
+  "bleak==3.0.2",
+  "PySide6-Essentials==6.11.2",
+]
+
+[project.optional-dependencies]
+macos-app = ["pyinstaller==6.22.2"]
+
+[project.scripts]
+hwcdq-control = "hwcdq_control.main:main"
+
+[project.urls]
+Homepage = "https://github.com/weisscorp/hwcdq-protocol"
+Repository = "https://github.com/weisscorp/hwcdq-protocol"
+Issues = "https://github.com/weisscorp/hwcdq-protocol/issues"
+
+[tool.setuptools]
+packages = [
+  "hwcdq_control",
+  "hwcdq_control.backend",
+  "hwcdq_control.ui",
+  "tools",
+]
+package-dir = { hwcdq_control = "src/hwcdq_control", tools = "tools" }
+
+[tool.setuptools.package-data]
+hwcdq_control = ["py.typed"]

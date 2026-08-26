@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "contract_version": "1.0.0",
+  "profile_id": "pidzoom-hw178p",
+  "model": "HW178P",
+  "display_name": "Pidzoom Portable charger HW178P",
+  "gatt_contract": "../gatt.json",
+  "voltage": {
+    "unit": "V",
+    "minimum": {
+      "decimal": "50.0",
+      "f32le_hex": "00004842"
+    },
+    "maximum": {
+      "decimal": "178.0",
+      "f32le_hex": "00003243"
+    },
+    "minimum_evidence": "owner_supplied_model_range",
+    "maximum_evidence": "owner_supplied_and_live_device_config"
+  },
+  "current": {
+    "unit": "A",
+    "minimum": {
+      "decimal": "0.01",
+      "f32le_hex": "0ad7233c"
+    },
+    "maximum": {
+      "decimal": "14.0",
+      "f32le_hex": "00006041"
+    },
+    "minimum_evidence": "conservative_positive_client_policy",
+    "maximum_evidence": "owner_supplied_and_live_device_config"
+  },
+  "device_limit_policy": {
+    "requires_fresh_config": true,
+    "voltage_max_field": "max_voltage",
+    "current_max_field": "max_single_module_current",
+    "effective_voltage": "profile minimum through min(valid device maximum, profile maximum)",
+    "effective_current": "profile minimum through min(valid device maximum, profile maximum)",
+    "invalid_or_missing_device_limit": "block voltage/current mutations and start",
+    "larger_device_limit_expands_profile": false,
+    "module_count_multiplies_current_limit": false
+  },
+  "mutation_policy": {
+    "requires_explicit_control_mode": true,
+    "setters_require_effective_limits": true,
+    "start_requires_operator_confirmation": true,
+    "unknown_or_tentative_commands_executable": false
+  },
+  "confidence": "confirmed",
+  "evidence": [
+    "docs/protocol.md#configuration-and-safety-limits",
+    "evidence/live-gatt-2026-08-25.md#hw178p-identity-and-control-range-provenance"
+  ]
+}
